@@ -6,7 +6,11 @@ import com.nst.myvehiclehub.request.LoginRequest;
 import com.nst.myvehiclehub.request.RegisterRequest;
 import com.nst.myvehiclehub.response.LoginResponse;
 import com.nst.myvehiclehub.response.RegisterResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -14,16 +18,21 @@ import org.springframework.web.server.ResponseStatusException;
 public class AuthService {
 
     private final AppUserRepository appUserRepository;
+    private final AuthenticationManager authManager;
+    private final JWTService jwtService;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public AuthService(AppUserRepository appUserRepository) {
+    public AuthService(AppUserRepository appUserRepository, AuthenticationManager authenticationManager) {
         this.appUserRepository = appUserRepository;
+        this.authManager = authenticationManager;
+        this.jwtService = new JWTService();
     }
 
-    public RegisterResponse createUser(RegisterRequest registerRequest) {
+    public RegisterResponse register(RegisterRequest registerRequest) {
         validateRegisterRequest(registerRequest);
         AppUser newUser = AppUser.builder()
                 .email(registerRequest.getEmail())
-                .password(registerRequest.getPassword())
+                .password(passwordEncoder.encode(registerRequest.getPassword()))
                 .lastName(registerRequest.getLastName())
                 .firstName(registerRequest.getFirstName())
                 .age(registerRequest.getAge())
@@ -46,15 +55,11 @@ public class AuthService {
 
     public LoginResponse login(LoginRequest loginRequest) {
         validateLoginRequest(loginRequest);
-        if (appUserRepository.existsByEmail(loginRequest.getEmail())) {
-            AppUser user = appUserRepository.findByEmail(loginRequest.getEmail())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        Authentication authentication =
+                authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-            if (user.getPassword().equals(loginRequest.getPassword())) {
-                return new LoginResponse("DONE");
-            } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid password");
-            }
+        if (authentication.isAuthenticated()) {
+            return new LoginResponse(jwtService.generateToken(loginRequest.getEmail()));
         }
 
         return new LoginResponse("User or password is incorrect");
