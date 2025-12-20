@@ -22,10 +22,10 @@ public class AuthService {
     private final JWTService jwtService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public AuthService(AppUserRepository appUserRepository, AuthenticationManager authenticationManager) {
+    public AuthService(AppUserRepository appUserRepository, AuthenticationManager authenticationManager, JWTService jwtService) {
         this.appUserRepository = appUserRepository;
         this.authManager = authenticationManager;
-        this.jwtService = new JWTService();
+        this.jwtService = jwtService;
     }
 
     public RegisterResponse register(RegisterRequest registerRequest) {
