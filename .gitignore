@@ -10,3 +10,16 @@ target/
 *.iws
 *.iml
 *.ipr
+
+### Sensitive Files - DO NOT COMMIT ###
+.env
+.env.local
+.env.*.local
+EXTRACTED_SECRETS.md
+
+### Security ###
+*.key
+*.pem
+*.p12
+secrets/
+
