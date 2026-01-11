@@ -53,6 +53,7 @@ public class RefreshTokenService {
         return refreshTokenRepository.findByToken(token);
     }
 
+    @Transactional
     public void revokeToken(RefreshToken token) {
         refreshTokenRepository.delete(token);
     }

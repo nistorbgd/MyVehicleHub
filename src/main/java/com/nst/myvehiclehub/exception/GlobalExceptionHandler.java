@@ -30,6 +30,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
 
+    @ExceptionHandler(RefreshTokenNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleRefreshTokenNotFoundException(final RefreshTokenNotFoundException e) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", "Unauthorized");
+        error.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+    }
+
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, String>> handleHttpMessageNotReadable(HttpMessageNotReadableException e) {
         Map<String, String> error = new HashMap<>();

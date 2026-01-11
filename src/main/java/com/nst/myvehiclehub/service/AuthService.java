@@ -9,6 +9,7 @@ import com.nst.myvehiclehub.entity.AuthProvider;
 import com.nst.myvehiclehub.entity.RefreshToken;
 import com.nst.myvehiclehub.entity.Role;
 import com.nst.myvehiclehub.entity.UserPrincipal;
+import com.nst.myvehiclehub.exception.RefreshTokenNotFoundException;
 import com.nst.myvehiclehub.repository.AppUserRepository;
 import com.nst.myvehiclehub.request.*;
 import com.nst.myvehiclehub.response.LoginResponse;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -152,17 +154,18 @@ public class AuthService {
                 });
     }
 
+    @Transactional
     public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
         validateRefreshTokenRequest(request);
         RefreshToken refreshToken = refreshTokenService.findByToken(request.getRefreshToken())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid refresh token"));
+                .orElseThrow(() -> new RefreshTokenNotFoundException("Session expired. Please login again."));
         refreshTokenService.verifyExpiration(refreshToken);
 
         AppUser user = refreshToken.getUser();
-        String newAccessToken = jwtService.generateToken(user.getEmail());
+        String newJwtToken = jwtService.generateToken(user.getEmail());
         refreshTokenService.revokeToken(refreshToken);
         String newRefreshToken = refreshTokenService.createRefreshToken(user).getToken();
-        return new RefreshTokenResponse(newAccessToken, newRefreshToken, "Bearer", 1800); // 1800 seconds = 30 minutes
+        return new RefreshTokenResponse(newJwtToken, newRefreshToken);
     }
 
     private static void validateRefreshTokenRequest(RefreshTokenRequest request) {
