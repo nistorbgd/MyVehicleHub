@@ -6,9 +6,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RefreshTokenResponse {
-    private String accessToken;
+    private String jwtToken;
     private String refreshToken;
-    private String tokenType;
-    private long expiresIn; // in seconds
 }
 
