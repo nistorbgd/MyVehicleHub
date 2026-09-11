@@ -1,7 +1,7 @@
 package com.nst.myvehiclehub.serviceImpl;
 
-import com.nst.myvehiclehub.entity.AppUser;
-import com.nst.myvehiclehub.entity.RefreshToken;
+import com.nst.myvehiclehub.entity.AppUserRecord;
+import com.nst.myvehiclehub.entity.RefreshTokenRecord;
 import com.nst.myvehiclehub.exception.ExpiredRefreshTokenException;
 import com.nst.myvehiclehub.repository.AppUserRepository;
 import com.nst.myvehiclehub.repository.RefreshTokenRepository;
@@ -28,9 +28,9 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     this.appUserRepository = appUserRepository;
   }
 
-  public RefreshToken createRefreshToken(AppUser user) {
-    RefreshToken refreshToken =
-        RefreshToken.builder()
+  public RefreshTokenRecord createRefreshToken(AppUserRecord user) {
+    RefreshTokenRecord refreshToken =
+        RefreshTokenRecord.builder()
             .token(java.util.UUID.randomUUID().toString())
             .user(user)
             .createdDate(Instant.now())
@@ -41,7 +41,7 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     return refreshTokenRepository.save(refreshToken);
   }
 
-  public RefreshToken verifyExpiration(RefreshToken token) {
+  public RefreshTokenRecord verifyExpiration(RefreshTokenRecord token) {
     if (token.getExpiryDate().isBefore(Instant.now())) {
       refreshTokenRepository.delete(token);
       throw new ExpiredRefreshTokenException("Refresh token expired. Please login again.");
@@ -49,17 +49,17 @@ public class RefreshTokenServiceImpl implements RefreshTokenService {
     return token;
   }
 
-  public Optional<RefreshToken> findByToken(String token) {
+  public Optional<RefreshTokenRecord> findByToken(String token) {
     return refreshTokenRepository.findByToken(token);
   }
 
   @Transactional
-  public void revokeToken(RefreshToken token) {
+  public void revokeToken(RefreshTokenRecord token) {
     refreshTokenRepository.delete(token);
   }
 
   @Transactional
-  public void revokeAllUserTokens(AppUser user) {
+  public void revokeAllUserTokens(AppUserRecord user) {
     refreshTokenRepository.deleteByUser(user);
   }
 

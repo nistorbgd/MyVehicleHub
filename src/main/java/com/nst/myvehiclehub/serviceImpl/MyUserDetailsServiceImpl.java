@@ -1,7 +1,7 @@
 package com.nst.myvehiclehub.serviceImpl;
 
-import com.nst.myvehiclehub.entity.AppUser;
-import com.nst.myvehiclehub.entity.UserPrincipal;
+import com.nst.myvehiclehub.entity.AppUserRecord;
+import com.nst.myvehiclehub.entity.UserPrincipalRecord;
 import com.nst.myvehiclehub.repository.AppUserRepository;
 import com.nst.myvehiclehub.service.MyUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,12 +19,12 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    AppUser user =
+    AppUserRecord user =
         appUserRepository
             .findByEmail(email)
             .orElseThrow(
                 () -> new UsernameNotFoundException("User not found with email: " + email));
 
-    return new UserPrincipal(user);
+    return new UserPrincipalRecord(user);
   }
 }

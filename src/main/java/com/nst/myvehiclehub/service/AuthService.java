@@ -5,7 +5,7 @@ import com.nst.myvehiclehub.dto.request.*;
 import com.nst.myvehiclehub.dto.response.LoginResponse;
 import com.nst.myvehiclehub.dto.response.RefreshTokenResponse;
 import com.nst.myvehiclehub.dto.response.RegisterResponse;
-import com.nst.myvehiclehub.entity.AppUser;
+import com.nst.myvehiclehub.entity.AppUserRecord;
 
 public interface AuthService {
   RegisterResponse register(RegisterRequestDTO registerRequestDTO);
@@ -18,9 +18,9 @@ public interface AuthService {
 
   void logout(RefreshTokenDTO request);
 
-  void logoutAll(AppUser user);
+  void logoutAll(AppUserRecord user);
 
   void validateGoogleToken(String idToken);
 
-  AppUser handleGoogleUser(GoogleIdToken.Payload payload);
+  AppUserRecord handleGoogleUser(GoogleIdToken.Payload payload);
 }

@@ -8,9 +8,9 @@ import com.nst.myvehiclehub.dto.request.*;
 import com.nst.myvehiclehub.dto.response.LoginResponse;
 import com.nst.myvehiclehub.dto.response.RefreshTokenResponse;
 import com.nst.myvehiclehub.dto.response.RegisterResponse;
-import com.nst.myvehiclehub.entity.AppUser;
-import com.nst.myvehiclehub.entity.RefreshToken;
-import com.nst.myvehiclehub.entity.UserPrincipal;
+import com.nst.myvehiclehub.entity.AppUserRecord;
+import com.nst.myvehiclehub.entity.RefreshTokenRecord;
+import com.nst.myvehiclehub.entity.UserPrincipalRecord;
 import com.nst.myvehiclehub.enums.AuthProvider;
 import com.nst.myvehiclehub.enums.Role;
 import com.nst.myvehiclehub.exception.RefreshTokenNotFoundException;
@@ -59,8 +59,8 @@ public class AuthServiceImpl implements AuthService {
 
   public RegisterResponse register(RegisterRequestDTO registerRequestDTO) {
     validateRegisterRequest(registerRequestDTO);
-    AppUser newUser =
-        AppUser.builder()
+    AppUserRecord newUser =
+        AppUserRecord.builder()
             .email(registerRequestDTO.getEmail())
             .password(passwordEncoder.encode(registerRequestDTO.getPassword()))
             .lastName(registerRequestDTO.getLastName())
@@ -92,8 +92,8 @@ public class AuthServiceImpl implements AuthService {
                 loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
 
     if (authentication.isAuthenticated()) {
-      UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-      AppUser user = userPrincipal.getUser();
+      UserPrincipalRecord userPrincipal = (UserPrincipalRecord) authentication.getPrincipal();
+      AppUserRecord user = userPrincipal.getUser();
       String accessToken = jwtService.generateToken(loginRequestDTO.getEmail());
       String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
       return new LoginResponse(accessToken, refreshToken);
@@ -122,7 +122,7 @@ public class AuthServiceImpl implements AuthService {
       }
 
       GoogleIdToken.Payload payload = idToken.getPayload();
-      AppUser user = handleGoogleUser(payload);
+      AppUserRecord user = handleGoogleUser(payload);
       String accessToken = jwtService.generateToken(user.getEmail());
       String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
 
@@ -140,7 +140,7 @@ public class AuthServiceImpl implements AuthService {
     }
   }
 
-  public AppUser handleGoogleUser(GoogleIdToken.Payload payload) {
+  public AppUserRecord handleGoogleUser(GoogleIdToken.Payload payload) {
     String email = payload.getEmail();
     String firstName = (String) payload.get("given_name");
     String lastName = (String) payload.get("family_name");
@@ -149,8 +149,8 @@ public class AuthServiceImpl implements AuthService {
         .findByEmail(email)
         .orElseGet(
             () -> {
-              AppUser newUser =
-                  AppUser.builder()
+              AppUserRecord newUser =
+                  AppUserRecord.builder()
                       .email(email)
                       .firstName(firstName)
                       .lastName(lastName)
@@ -165,14 +165,14 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   public RefreshTokenResponse refreshToken(RefreshTokenDTO request) {
     validateRefreshTokenRequest(request);
-    RefreshToken refreshToken =
+    RefreshTokenRecord refreshToken =
         refreshTokenService
             .findByToken(request.getRefreshToken())
             .orElseThrow(
                 () -> new RefreshTokenNotFoundException("Session expired. Please login again."));
     refreshTokenService.verifyExpiration(refreshToken);
 
-    AppUser user = refreshToken.getUser();
+    AppUserRecord user = refreshToken.getUser();
     String newJwtToken = jwtService.generateToken(user.getEmail());
     refreshTokenService.revokeToken(refreshToken);
     String newRefreshToken = refreshTokenService.createRefreshToken(user).getToken();
@@ -187,7 +187,7 @@ public class AuthServiceImpl implements AuthService {
 
   public void logout(RefreshTokenDTO request) {
     validateLogoutRequest(request);
-    RefreshToken refreshToken =
+    RefreshTokenRecord refreshToken =
         refreshTokenService
             .findByToken(request.getRefreshToken())
             .orElseThrow(
@@ -201,7 +201,7 @@ public class AuthServiceImpl implements AuthService {
     }
   }
 
-  public void logoutAll(AppUser user) {
+  public void logoutAll(AppUserRecord user) {
     refreshTokenService.revokeAllUserTokens(user);
   }
 }

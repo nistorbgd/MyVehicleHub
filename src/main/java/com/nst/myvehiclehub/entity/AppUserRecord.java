@@ -17,7 +17,7 @@ import org.hibernate.annotations.UuidGenerator;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class AppUser {
+public class AppUserRecord {
 
   @Id @UuidGenerator private UUID id;
 

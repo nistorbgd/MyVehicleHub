@@ -8,11 +8,11 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Getter
-public class UserPrincipal implements UserDetails {
+public class UserPrincipalRecord implements UserDetails {
 
-  private final AppUser user;
+  private final AppUserRecord user;
 
-  public UserPrincipal(AppUser user) {
+  public UserPrincipalRecord(AppUserRecord user) {
     this.user = user;
   }
 

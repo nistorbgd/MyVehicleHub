@@ -1,19 +1,19 @@
 package com.nst.myvehiclehub.service;
 
-import com.nst.myvehiclehub.entity.AppUser;
-import com.nst.myvehiclehub.entity.RefreshToken;
+import com.nst.myvehiclehub.entity.AppUserRecord;
+import com.nst.myvehiclehub.entity.RefreshTokenRecord;
 import java.util.Optional;
 
 public interface RefreshTokenService {
-  RefreshToken createRefreshToken(AppUser user);
+  RefreshTokenRecord createRefreshToken(AppUserRecord user);
 
-  RefreshToken verifyExpiration(RefreshToken token);
+  RefreshTokenRecord verifyExpiration(RefreshTokenRecord token);
 
-  Optional<RefreshToken> findByToken(String token);
+  Optional<RefreshTokenRecord> findByToken(String token);
 
-  void revokeToken(RefreshToken token);
+  void revokeToken(RefreshTokenRecord token);
 
-  void revokeAllUserTokens(AppUser user);
+  void revokeAllUserTokens(AppUserRecord user);
 
   void deleteExpiredTokens();
 }

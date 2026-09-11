@@ -3,7 +3,7 @@ package com.nst.myvehiclehub.controller;
 import com.nst.myvehiclehub.dto.request.VehicleRequestDTO;
 import com.nst.myvehiclehub.dto.response.VehicleBlotterDTO;
 import com.nst.myvehiclehub.dto.response.VehicleDTO;
-import com.nst.myvehiclehub.entity.UserPrincipal;
+import com.nst.myvehiclehub.entity.UserPrincipalRecord;
 import com.nst.myvehiclehub.service.VehicleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -22,13 +22,13 @@ public class VehicleController {
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<VehicleDTO> addVehicle(
       @RequestBody VehicleRequestDTO request, Authentication authentication) {
-    UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+    UserPrincipalRecord principal = (UserPrincipalRecord) authentication.getPrincipal();
     return ResponseEntity.ok(vehicleService.addVehicle(request, principal.getUser()));
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<VehicleBlotterDTO> getVehicles(Authentication authentication) {
-    UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+    UserPrincipalRecord principal = (UserPrincipalRecord) authentication.getPrincipal();
     return ResponseEntity.ok(vehicleService.getVehicles(principal.getUser()));
   }
 }

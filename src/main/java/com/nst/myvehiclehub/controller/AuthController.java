@@ -7,7 +7,7 @@ import com.nst.myvehiclehub.dto.request.RegisterRequestDTO;
 import com.nst.myvehiclehub.dto.response.LoginResponse;
 import com.nst.myvehiclehub.dto.response.RefreshTokenResponse;
 import com.nst.myvehiclehub.dto.response.RegisterResponse;
-import com.nst.myvehiclehub.entity.UserPrincipal;
+import com.nst.myvehiclehub.entity.UserPrincipalRecord;
 import com.nst.myvehiclehub.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -69,7 +69,7 @@ public class AuthController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> logoutAll(Authentication authentication) {
-    UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+    UserPrincipalRecord userPrincipal = (UserPrincipalRecord) authentication.getPrincipal();
     authService.logoutAll(userPrincipal.getUser());
     return ResponseEntity.ok("Logged out from all devices successfully");
   }

@@ -3,8 +3,8 @@ package com.nst.myvehiclehub.serviceImpl;
 import com.nst.myvehiclehub.dto.request.VehicleRequestDTO;
 import com.nst.myvehiclehub.dto.response.VehicleBlotterDTO;
 import com.nst.myvehiclehub.dto.response.VehicleDTO;
-import com.nst.myvehiclehub.entity.AppUser;
-import com.nst.myvehiclehub.entity.Vehicle;
+import com.nst.myvehiclehub.entity.AppUserRecord;
+import com.nst.myvehiclehub.entity.VehicleRecord;
 import com.nst.myvehiclehub.repository.VehicleRepository;
 import com.nst.myvehiclehub.service.VehicleService;
 import java.time.Year;
@@ -23,11 +23,11 @@ public class VehicleServiceImpl implements VehicleService {
     this.vehicleRepository = vehicleRepository;
   }
 
-  public VehicleDTO addVehicle(VehicleRequestDTO request, AppUser user) {
+  public VehicleDTO addVehicle(VehicleRequestDTO request, AppUserRecord user) {
     validateAddVehicleRequest(request);
 
-    Vehicle vehicle =
-        Vehicle.builder()
+    VehicleRecord vehicleRecord =
+        VehicleRecord.builder()
             .make(request.getMake())
             .model(request.getModel())
             .year(request.getYear())
@@ -36,15 +36,15 @@ public class VehicleServiceImpl implements VehicleService {
             .user(user)
             .build();
 
-    Vehicle savedVehicle = vehicleRepository.save(vehicle);
+    VehicleRecord savedVehicleRecord = vehicleRepository.save(vehicleRecord);
 
     return new VehicleDTO(
-        savedVehicle.getId(),
-        savedVehicle.getMake(),
-        savedVehicle.getModel(),
-        savedVehicle.getYear(),
-        savedVehicle.getPlateNumber(),
-        savedVehicle.getVin(),
+        savedVehicleRecord.getId(),
+        savedVehicleRecord.getMake(),
+        savedVehicleRecord.getModel(),
+        savedVehicleRecord.getYear(),
+        savedVehicleRecord.getPlateNumber(),
+        savedVehicleRecord.getVin(),
         "Vehicle added successfully");
   }
 
@@ -64,20 +64,20 @@ public class VehicleServiceImpl implements VehicleService {
     }
   }
 
-  public VehicleBlotterDTO getVehicles(AppUser user) {
-    List<Vehicle> vehicleList = vehicleRepository.findByUser(user);
+  public VehicleBlotterDTO getVehicles(AppUserRecord user) {
+    List<VehicleRecord> vehicleRecordList = vehicleRepository.findByUser(user);
 
     List<VehicleDTO> vehicles =
-        vehicleList.stream()
+        vehicleRecordList.stream()
             .map(
-                vehicle ->
+                vehicleRecord ->
                     new VehicleDTO(
-                        vehicle.getId(),
-                        vehicle.getMake(),
-                        vehicle.getModel(),
-                        vehicle.getYear(),
-                        vehicle.getPlateNumber(),
-                        vehicle.getVin(),
+                        vehicleRecord.getId(),
+                        vehicleRecord.getMake(),
+                        vehicleRecord.getModel(),
+                        vehicleRecord.getYear(),
+                        vehicleRecord.getPlateNumber(),
+                        vehicleRecord.getVin(),
                         null // No message needed for list items
                         ))
             .collect(Collectors.toList());

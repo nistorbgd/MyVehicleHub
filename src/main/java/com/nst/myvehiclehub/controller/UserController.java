@@ -1,7 +1,7 @@
 package com.nst.myvehiclehub.controller;
 
 import com.nst.myvehiclehub.dto.response.ProfileDTO;
-import com.nst.myvehiclehub.entity.UserPrincipal;
+import com.nst.myvehiclehub.entity.UserPrincipalRecord;
 import com.nst.myvehiclehub.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -20,7 +20,7 @@ public class UserController {
 
   @GetMapping(path = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ProfileDTO> getCurrentUserProfile(Authentication authentication) {
-    UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+    UserPrincipalRecord principal = (UserPrincipalRecord) authentication.getPrincipal();
     return ResponseEntity.ok(userService.getProfile(principal.getUser().getId()));
   }
 }
