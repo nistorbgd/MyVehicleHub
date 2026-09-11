@@ -8,8 +8,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class MyVehicleHubApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MyVehicleHubApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(MyVehicleHubApplication.class, args);
+  }
 }

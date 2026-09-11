@@ -14,27 +14,24 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Vehicle {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Column(nullable = false)
-    private String make;
+  @Column(nullable = false)
+  private String make;
 
-    @Column(nullable = false)
-    private String model;
+  @Column(nullable = false)
+  private String model;
 
-    @Column(nullable = false)
-    private Integer year;
+  @Column(nullable = false)
+  private Integer year;
 
-    @Column
-    private String plateNumber;
+  @Column private String plateNumber;
 
-    @Column
-    private String vin;
+  @Column private String vin;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private AppUser user;
-
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id", nullable = false)
+  private AppUser user;
 }

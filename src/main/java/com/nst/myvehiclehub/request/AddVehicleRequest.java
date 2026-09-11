@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AddVehicleRequest {
-    private String make;
-    private String model;
-    private Integer year;
-    private String plateNumber;
-    private String vin;
+  private String make;
+  private String model;
+  private Integer year;
+  private String plateNumber;
+  private String vin;
 }

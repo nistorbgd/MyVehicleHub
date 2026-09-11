@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class VehicleResponse {
-    private Long id;
-    private String make;
-    private String model;
-    private Integer year;
-    private String plateNumber;
-    private String vin;
-    private String message;
+  private Long id;
+  private String make;
+  private String model;
+  private Integer year;
+  private String plateNumber;
+  private String vin;
+  private String message;
 }
