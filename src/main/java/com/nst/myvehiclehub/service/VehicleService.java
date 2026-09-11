@@ -1,12 +1,12 @@
 package com.nst.myvehiclehub.service;
 
-import com.nst.myvehiclehub.dto.request.AddVehicleRequest;
-import com.nst.myvehiclehub.dto.response.AllVehiclesResponse;
+import com.nst.myvehiclehub.dto.request.VehicleRequestDTO;
+import com.nst.myvehiclehub.dto.response.VehicleBlotterDTO;
+import com.nst.myvehiclehub.dto.response.VehicleDTO;
 import com.nst.myvehiclehub.entity.AppUser;
 
 public interface VehicleService {
-  com.nst.myvehiclehub.dto.response.VehicleResponse addVehicle(
-      AddVehicleRequest request, AppUser user);
+  VehicleDTO addVehicle(VehicleRequestDTO request, AppUser user);
 
-  AllVehiclesResponse getVehicles(AppUser user);
+  VehicleBlotterDTO getVehicles(AppUser user);
 }

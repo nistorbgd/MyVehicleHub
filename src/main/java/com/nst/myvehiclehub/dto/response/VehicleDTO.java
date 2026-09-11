@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class VehicleResponse {
+public class VehicleDTO {
   private Long id;
   private String make;
   private String model;

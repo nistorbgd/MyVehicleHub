@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddVehicleRequest {
+public class VehicleRequestDTO {
   private String make;
   private String model;
   private Integer year;

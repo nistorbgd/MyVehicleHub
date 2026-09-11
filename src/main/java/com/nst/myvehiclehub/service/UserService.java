@@ -1,8 +1,8 @@
 package com.nst.myvehiclehub.service;
 
-import com.nst.myvehiclehub.dto.response.GetProfileResponse;
+import com.nst.myvehiclehub.dto.response.ProfileDTO;
 import java.util.UUID;
 
 public interface UserService {
-  GetProfileResponse getProfile(UUID userId);
+  ProfileDTO getProfile(UUID userId);
 }

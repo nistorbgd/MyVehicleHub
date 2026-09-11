@@ -8,15 +8,15 @@ import com.nst.myvehiclehub.dto.response.RegisterResponse;
 import com.nst.myvehiclehub.entity.AppUser;
 
 public interface AuthService {
-  RegisterResponse register(RegisterRequest registerRequest);
+  RegisterResponse register(RegisterRequestDTO registerRequestDTO);
 
-  LoginResponse login(LoginRequest loginRequest);
+  LoginResponse login(LoginRequestDTO loginRequestDTO);
 
-  LoginResponse googleLogin(GoogleLoginRequest request);
+  LoginResponse googleLogin(GoogleLoginRequestDTO request);
 
-  RefreshTokenResponse refreshToken(RefreshTokenRequest request);
+  RefreshTokenResponse refreshToken(RefreshTokenDTO request);
 
-  void logout(LogoutRequest request);
+  void logout(RefreshTokenDTO request);
 
   void logoutAll(AppUser user);
 

@@ -1,6 +1,6 @@
 package com.nst.myvehiclehub.serviceImpl;
 
-import com.nst.myvehiclehub.dto.response.GetProfileResponse;
+import com.nst.myvehiclehub.dto.response.ProfileDTO;
 import com.nst.myvehiclehub.entity.AppUser;
 import com.nst.myvehiclehub.repository.AppUserRepository;
 import com.nst.myvehiclehub.service.UserService;
@@ -18,12 +18,11 @@ public class UserServiceImpl implements UserService {
     this.userRepository = userRepository;
   }
 
-  public GetProfileResponse getProfile(UUID userId) {
+  public ProfileDTO getProfile(UUID userId) {
     AppUser user =
         userRepository
             .findById(userId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-    return new GetProfileResponse(
-        user.getFirstName(), user.getLastName(), user.getEmail(), user.getAge());
+    return new ProfileDTO(user.getFirstName(), user.getLastName(), user.getEmail(), user.getAge());
   }
 }

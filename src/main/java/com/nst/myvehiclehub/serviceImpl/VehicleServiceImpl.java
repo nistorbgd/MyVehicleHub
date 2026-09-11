@@ -1,8 +1,8 @@
 package com.nst.myvehiclehub.serviceImpl;
 
-import com.nst.myvehiclehub.dto.request.AddVehicleRequest;
-import com.nst.myvehiclehub.dto.response.AllVehiclesResponse;
-import com.nst.myvehiclehub.dto.response.VehicleResponse;
+import com.nst.myvehiclehub.dto.request.VehicleRequestDTO;
+import com.nst.myvehiclehub.dto.response.VehicleBlotterDTO;
+import com.nst.myvehiclehub.dto.response.VehicleDTO;
 import com.nst.myvehiclehub.entity.AppUser;
 import com.nst.myvehiclehub.entity.Vehicle;
 import com.nst.myvehiclehub.repository.VehicleRepository;
@@ -23,7 +23,7 @@ public class VehicleServiceImpl implements VehicleService {
     this.vehicleRepository = vehicleRepository;
   }
 
-  public VehicleResponse addVehicle(AddVehicleRequest request, AppUser user) {
+  public VehicleDTO addVehicle(VehicleRequestDTO request, AppUser user) {
     validateAddVehicleRequest(request);
 
     Vehicle vehicle =
@@ -38,7 +38,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     Vehicle savedVehicle = vehicleRepository.save(vehicle);
 
-    return new VehicleResponse(
+    return new VehicleDTO(
         savedVehicle.getId(),
         savedVehicle.getMake(),
         savedVehicle.getModel(),
@@ -48,7 +48,7 @@ public class VehicleServiceImpl implements VehicleService {
         "Vehicle added successfully");
   }
 
-  private void validateAddVehicleRequest(AddVehicleRequest request) {
+  private void validateAddVehicleRequest(VehicleRequestDTO request) {
     if (request.getMake() == null || request.getMake().trim().isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Make is required");
     }
@@ -64,14 +64,14 @@ public class VehicleServiceImpl implements VehicleService {
     }
   }
 
-  public AllVehiclesResponse getVehicles(AppUser user) {
+  public VehicleBlotterDTO getVehicles(AppUser user) {
     List<Vehicle> vehicleList = vehicleRepository.findByUser(user);
 
-    List<VehicleResponse> vehicleResponses =
+    List<VehicleDTO> vehicles =
         vehicleList.stream()
             .map(
                 vehicle ->
-                    new VehicleResponse(
+                    new VehicleDTO(
                         vehicle.getId(),
                         vehicle.getMake(),
                         vehicle.getModel(),
@@ -82,6 +82,6 @@ public class VehicleServiceImpl implements VehicleService {
                         ))
             .collect(Collectors.toList());
 
-    return new AllVehiclesResponse(vehicleResponses);
+    return new VehicleBlotterDTO(vehicles);
   }
 }

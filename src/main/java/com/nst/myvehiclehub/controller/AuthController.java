@@ -1,10 +1,9 @@
 package com.nst.myvehiclehub.controller;
 
-import com.nst.myvehiclehub.dto.request.GoogleLoginRequest;
-import com.nst.myvehiclehub.dto.request.LoginRequest;
-import com.nst.myvehiclehub.dto.request.LogoutRequest;
-import com.nst.myvehiclehub.dto.request.RefreshTokenRequest;
-import com.nst.myvehiclehub.dto.request.RegisterRequest;
+import com.nst.myvehiclehub.dto.request.GoogleLoginRequestDTO;
+import com.nst.myvehiclehub.dto.request.LoginRequestDTO;
+import com.nst.myvehiclehub.dto.request.RefreshTokenDTO;
+import com.nst.myvehiclehub.dto.request.RegisterRequestDTO;
 import com.nst.myvehiclehub.dto.response.LoginResponse;
 import com.nst.myvehiclehub.dto.response.RefreshTokenResponse;
 import com.nst.myvehiclehub.dto.response.RegisterResponse;
@@ -27,23 +26,24 @@ public class AuthController {
       path = "/register",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
-    return ResponseEntity.ok(authService.register(registerRequest));
+  public ResponseEntity<RegisterResponse> register(
+      @RequestBody RegisterRequestDTO registerRequestDTO) {
+    return ResponseEntity.ok(authService.register(registerRequestDTO));
   }
 
   @PostMapping(
       path = "/login",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
-    return ResponseEntity.ok(authService.login(loginRequest));
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequestDTO loginRequestDTO) {
+    return ResponseEntity.ok(authService.login(loginRequestDTO));
   }
 
   @PostMapping(
       path = "/google",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<LoginResponse> googleLogin(@RequestBody GoogleLoginRequest request) {
+  public ResponseEntity<LoginResponse> googleLogin(@RequestBody GoogleLoginRequestDTO request) {
     return ResponseEntity.ok(authService.googleLogin(request));
   }
 
@@ -51,8 +51,7 @@ public class AuthController {
       path = "/refreshToken",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RefreshTokenResponse> refreshToken(
-      @RequestBody RefreshTokenRequest request) {
+  public ResponseEntity<RefreshTokenResponse> refreshToken(@RequestBody RefreshTokenDTO request) {
     return ResponseEntity.ok(authService.refreshToken(request));
   }
 
@@ -60,7 +59,7 @@ public class AuthController {
       path = "/logout",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<String> logout(@RequestBody LogoutRequest request) {
+  public ResponseEntity<String> logout(@RequestBody RefreshTokenDTO request) {
     authService.logout(request);
     return ResponseEntity.ok("Logged out successfully");
   }

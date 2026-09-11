@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AllVehiclesResponse {
-  private List<VehicleResponse> vehicles;
+public class VehicleBlotterDTO {
+  private List<VehicleDTO> vehicles;
 }

@@ -1,8 +1,8 @@
 package com.nst.myvehiclehub.controller;
 
-import com.nst.myvehiclehub.dto.request.AddVehicleRequest;
-import com.nst.myvehiclehub.dto.response.AllVehiclesResponse;
-import com.nst.myvehiclehub.dto.response.VehicleResponse;
+import com.nst.myvehiclehub.dto.request.VehicleRequestDTO;
+import com.nst.myvehiclehub.dto.response.VehicleBlotterDTO;
+import com.nst.myvehiclehub.dto.response.VehicleDTO;
 import com.nst.myvehiclehub.entity.UserPrincipal;
 import com.nst.myvehiclehub.service.VehicleService;
 import lombok.RequiredArgsConstructor;
@@ -20,14 +20,14 @@ public class VehicleController {
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<VehicleResponse> addVehicle(
-      @RequestBody AddVehicleRequest request, Authentication authentication) {
+  public ResponseEntity<VehicleDTO> addVehicle(
+      @RequestBody VehicleRequestDTO request, Authentication authentication) {
     UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
     return ResponseEntity.ok(vehicleService.addVehicle(request, principal.getUser()));
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<AllVehiclesResponse> getVehicles(Authentication authentication) {
+  public ResponseEntity<VehicleBlotterDTO> getVehicles(Authentication authentication) {
     UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
     return ResponseEntity.ok(vehicleService.getVehicles(principal.getUser()));
   }

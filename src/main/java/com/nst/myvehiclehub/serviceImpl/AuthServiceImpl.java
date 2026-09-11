@@ -57,15 +57,15 @@ public class AuthServiceImpl implements AuthService {
     this.passwordEncoder = passwordEncoder;
   }
 
-  public RegisterResponse register(RegisterRequest registerRequest) {
-    validateRegisterRequest(registerRequest);
+  public RegisterResponse register(RegisterRequestDTO registerRequestDTO) {
+    validateRegisterRequest(registerRequestDTO);
     AppUser newUser =
         AppUser.builder()
-            .email(registerRequest.getEmail())
-            .password(passwordEncoder.encode(registerRequest.getPassword()))
-            .lastName(registerRequest.getLastName())
-            .firstName(registerRequest.getFirstName())
-            .age(registerRequest.getAge())
+            .email(registerRequestDTO.getEmail())
+            .password(passwordEncoder.encode(registerRequestDTO.getPassword()))
+            .lastName(registerRequestDTO.getLastName())
+            .firstName(registerRequestDTO.getFirstName())
+            .age(registerRequestDTO.getAge())
             .role(Role.USER)
             .authProvider(AuthProvider.EMAIL)
             .build();
@@ -74,27 +74,27 @@ public class AuthServiceImpl implements AuthService {
     return new RegisterResponse(newUser.getId().toString());
   }
 
-  private void validateRegisterRequest(RegisterRequest registerRequest) {
-    if (registerRequest.getEmail() == null || registerRequest.getPassword() == null) {
+  private void validateRegisterRequest(RegisterRequestDTO registerRequestDTO) {
+    if (registerRequestDTO.getEmail() == null || registerRequestDTO.getPassword() == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password is missing");
     }
 
-    if (appUserRepository.existsByEmail(registerRequest.getEmail())) {
+    if (appUserRepository.existsByEmail(registerRequestDTO.getEmail())) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already in use");
     }
   }
 
-  public LoginResponse login(LoginRequest loginRequest) {
-    validateLoginRequest(loginRequest);
+  public LoginResponse login(LoginRequestDTO loginRequestDTO) {
+    validateLoginRequest(loginRequestDTO);
     Authentication authentication =
         authManager.authenticate(
             new UsernamePasswordAuthenticationToken(
-                loginRequest.getEmail(), loginRequest.getPassword()));
+                loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
 
     if (authentication.isAuthenticated()) {
       UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
       AppUser user = userPrincipal.getUser();
-      String accessToken = jwtService.generateToken(loginRequest.getEmail());
+      String accessToken = jwtService.generateToken(loginRequestDTO.getEmail());
       String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
       return new LoginResponse(accessToken, refreshToken);
     }
@@ -102,13 +102,13 @@ public class AuthServiceImpl implements AuthService {
     throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
   }
 
-  private void validateLoginRequest(LoginRequest loginRequest) {
-    if (loginRequest.getEmail() == null || loginRequest.getPassword() == null) {
+  private void validateLoginRequest(LoginRequestDTO loginRequestDTO) {
+    if (loginRequestDTO.getEmail() == null || loginRequestDTO.getPassword() == null) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email or password is missing");
     }
   }
 
-  public LoginResponse googleLogin(GoogleLoginRequest request) {
+  public LoginResponse googleLogin(GoogleLoginRequestDTO request) {
     validateGoogleToken(request.getIdToken());
     try {
       GoogleIdTokenVerifier verifier =
@@ -163,7 +163,7 @@ public class AuthServiceImpl implements AuthService {
   }
 
   @Transactional
-  public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
+  public RefreshTokenResponse refreshToken(RefreshTokenDTO request) {
     validateRefreshTokenRequest(request);
     RefreshToken refreshToken =
         refreshTokenService
@@ -179,13 +179,13 @@ public class AuthServiceImpl implements AuthService {
     return new RefreshTokenResponse(newJwtToken, newRefreshToken);
   }
 
-  private static void validateRefreshTokenRequest(RefreshTokenRequest request) {
+  private static void validateRefreshTokenRequest(RefreshTokenDTO request) {
     if (request.getRefreshToken() == null || request.getRefreshToken().isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token is required");
     }
   }
 
-  public void logout(LogoutRequest request) {
+  public void logout(RefreshTokenDTO request) {
     validateLogoutRequest(request);
     RefreshToken refreshToken =
         refreshTokenService
@@ -195,7 +195,7 @@ public class AuthServiceImpl implements AuthService {
     refreshTokenService.revokeToken(refreshToken);
   }
 
-  private static void validateLogoutRequest(LogoutRequest request) {
+  private static void validateLogoutRequest(RefreshTokenDTO request) {
     if (request.getRefreshToken() == null || request.getRefreshToken().isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Refresh token is required");
     }

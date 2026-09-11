@@ -3,6 +3,6 @@ package com.nst.myvehiclehub.dto.request;
 import lombok.Data;
 
 @Data
-public class GoogleLoginRequest {
+public class GoogleLoginRequestDTO {
   private String idToken;
 }
