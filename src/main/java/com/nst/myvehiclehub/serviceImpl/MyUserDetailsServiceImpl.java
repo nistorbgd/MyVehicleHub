@@ -19,7 +19,7 @@ public class MyUserDetailsServiceImpl implements MyUserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    AppUserRecord user =
+    var user =
         appUserRepository
             .findByEmail(email)
             .orElseThrow(

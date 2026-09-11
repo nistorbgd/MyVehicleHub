@@ -20,15 +20,15 @@ public class VehicleController {
   @PostMapping(
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<VehicleDTO> addVehicle(
+  public ResponseEntity<VehicleDTO> createVehicle(
       @RequestBody VehicleRequestDTO request, Authentication authentication) {
-    UserPrincipalRecord principal = (UserPrincipalRecord) authentication.getPrincipal();
-    return ResponseEntity.ok(vehicleService.addVehicle(request, principal.getUser()));
+    var principal = (UserPrincipalRecord) authentication.getPrincipal();
+    return ResponseEntity.ok(vehicleService.createVehicle(request, principal.getUser()));
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<VehicleBlotterDTO> getVehicles(Authentication authentication) {
-    UserPrincipalRecord principal = (UserPrincipalRecord) authentication.getPrincipal();
+    var principal = (UserPrincipalRecord) authentication.getPrincipal();
     return ResponseEntity.ok(vehicleService.getVehicles(principal.getUser()));
   }
 }

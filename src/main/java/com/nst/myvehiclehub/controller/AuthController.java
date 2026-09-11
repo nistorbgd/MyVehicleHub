@@ -69,7 +69,7 @@ public class AuthController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> logoutAll(Authentication authentication) {
-    UserPrincipalRecord userPrincipal = (UserPrincipalRecord) authentication.getPrincipal();
+    var userPrincipal = (UserPrincipalRecord) authentication.getPrincipal();
     authService.logoutAll(userPrincipal.getUser());
     return ResponseEntity.ok("Logged out from all devices successfully");
   }

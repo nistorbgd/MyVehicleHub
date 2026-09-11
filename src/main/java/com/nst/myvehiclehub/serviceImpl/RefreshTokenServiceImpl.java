@@ -3,30 +3,25 @@ package com.nst.myvehiclehub.serviceImpl;
 import com.nst.myvehiclehub.entity.AppUserRecord;
 import com.nst.myvehiclehub.entity.RefreshTokenRecord;
 import com.nst.myvehiclehub.exception.ExpiredRefreshTokenException;
-import com.nst.myvehiclehub.repository.AppUserRepository;
 import com.nst.myvehiclehub.repository.RefreshTokenRepository;
 import com.nst.myvehiclehub.service.RefreshTokenService;
 import java.time.Instant;
 import java.util.Optional;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
   private final RefreshTokenRepository refreshTokenRepository;
-  private final AppUserRepository appUserRepository;
 
   @Value("${app.refresh-token.expiration}")
   private long expirationDuration;
-
-  public RefreshTokenServiceImpl(
-      RefreshTokenRepository refreshTokenRepository, AppUserRepository appUserRepository) {
-    this.refreshTokenRepository = refreshTokenRepository;
-    this.appUserRepository = appUserRepository;
-  }
 
   public RefreshTokenRecord createRefreshToken(AppUserRecord user) {
     RefreshTokenRecord refreshToken =

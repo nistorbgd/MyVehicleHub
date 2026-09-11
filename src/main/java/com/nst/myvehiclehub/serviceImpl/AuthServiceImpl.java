@@ -22,6 +22,9 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collections;
 import java.util.UUID;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -33,6 +36,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
   private final AppUserRepository appUserRepository;
@@ -44,22 +49,9 @@ public class AuthServiceImpl implements AuthService {
   @Value("${spring.security.oauth2.client.registration.google.client-id}")
   private String googleClientId;
 
-  public AuthServiceImpl(
-      AppUserRepository appUserRepository,
-      AuthenticationManager authenticationManager,
-      JWTService jwtService,
-      RefreshTokenService refreshTokenService,
-      BCryptPasswordEncoder passwordEncoder) {
-    this.appUserRepository = appUserRepository;
-    this.authManager = authenticationManager;
-    this.jwtService = jwtService;
-    this.refreshTokenService = refreshTokenService;
-    this.passwordEncoder = passwordEncoder;
-  }
-
   public RegisterResponse register(RegisterRequestDTO registerRequestDTO) {
     validateRegisterRequest(registerRequestDTO);
-    AppUserRecord newUser =
+    var newUser =
         AppUserRecord.builder()
             .email(registerRequestDTO.getEmail())
             .password(passwordEncoder.encode(registerRequestDTO.getPassword()))
@@ -86,16 +78,16 @@ public class AuthServiceImpl implements AuthService {
 
   public LoginResponse login(LoginRequestDTO loginRequestDTO) {
     validateLoginRequest(loginRequestDTO);
-    Authentication authentication =
+    var authentication =
         authManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginRequestDTO.getEmail(), loginRequestDTO.getPassword()));
 
     if (authentication.isAuthenticated()) {
-      UserPrincipalRecord userPrincipal = (UserPrincipalRecord) authentication.getPrincipal();
-      AppUserRecord user = userPrincipal.getUser();
-      String accessToken = jwtService.generateToken(loginRequestDTO.getEmail());
-      String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
+      var userPrincipal = (UserPrincipalRecord) authentication.getPrincipal();
+      var user = userPrincipal.getUser();
+      var accessToken = jwtService.generateToken(loginRequestDTO.getEmail());
+      var refreshToken = refreshTokenService.createRefreshToken(user).getToken();
       return new LoginResponse(accessToken, refreshToken);
     }
 
@@ -111,20 +103,20 @@ public class AuthServiceImpl implements AuthService {
   public LoginResponse googleLogin(GoogleLoginRequestDTO request) {
     validateGoogleToken(request.getIdToken());
     try {
-      GoogleIdTokenVerifier verifier =
+      var verifier =
           new GoogleIdTokenVerifier.Builder(new NetHttpTransport(), new GsonFactory())
               .setAudience(Collections.singletonList(googleClientId))
               .build();
 
-      GoogleIdToken idToken = verifier.verify(request.getIdToken());
+      var idToken = verifier.verify(request.getIdToken());
       if (idToken == null) {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid Google ID token");
       }
 
-      GoogleIdToken.Payload payload = idToken.getPayload();
-      AppUserRecord user = handleGoogleUser(payload);
-      String accessToken = jwtService.generateToken(user.getEmail());
-      String refreshToken = refreshTokenService.createRefreshToken(user).getToken();
+      var payload = idToken.getPayload();
+      var user = handleGoogleUser(payload);
+      var accessToken = jwtService.generateToken(user.getEmail());
+      var refreshToken = refreshTokenService.createRefreshToken(user).getToken();
 
       return new LoginResponse(accessToken, refreshToken);
 
@@ -141,9 +133,9 @@ public class AuthServiceImpl implements AuthService {
   }
 
   public AppUserRecord handleGoogleUser(GoogleIdToken.Payload payload) {
-    String email = payload.getEmail();
-    String firstName = (String) payload.get("given_name");
-    String lastName = (String) payload.get("family_name");
+    var email = payload.getEmail();
+    var firstName = (String) payload.get("given_name");
+    var lastName = (String) payload.get("family_name");
 
     return appUserRepository
         .findByEmail(email)
@@ -165,17 +157,17 @@ public class AuthServiceImpl implements AuthService {
   @Transactional
   public RefreshTokenResponse refreshToken(RefreshTokenDTO request) {
     validateRefreshTokenRequest(request);
-    RefreshTokenRecord refreshToken =
+    var refreshToken =
         refreshTokenService
             .findByToken(request.getRefreshToken())
             .orElseThrow(
                 () -> new RefreshTokenNotFoundException("Session expired. Please login again."));
     refreshTokenService.verifyExpiration(refreshToken);
 
-    AppUserRecord user = refreshToken.getUser();
-    String newJwtToken = jwtService.generateToken(user.getEmail());
+    var user = refreshToken.getUser();
+    var newJwtToken = jwtService.generateToken(user.getEmail());
     refreshTokenService.revokeToken(refreshToken);
-    String newRefreshToken = refreshTokenService.createRefreshToken(user).getToken();
+    var newRefreshToken = refreshTokenService.createRefreshToken(user).getToken();
     return new RefreshTokenResponse(newJwtToken, newRefreshToken);
   }
 

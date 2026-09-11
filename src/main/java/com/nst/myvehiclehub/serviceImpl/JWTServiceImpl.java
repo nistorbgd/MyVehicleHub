@@ -38,7 +38,7 @@ public class JWTServiceImpl implements JWTService {
   }
 
   private SecretKey getKey() {
-    byte[] secretBytes = Decoders.BASE64.decode(secretKey);
+    var secretBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(secretBytes);
   }
 

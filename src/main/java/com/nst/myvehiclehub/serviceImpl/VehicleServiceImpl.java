@@ -10,23 +10,24 @@ import com.nst.myvehiclehub.service.VehicleService;
 import java.time.Year;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class VehicleServiceImpl implements VehicleService {
 
   private final VehicleRepository vehicleRepository;
 
-  public VehicleServiceImpl(VehicleRepository vehicleRepository) {
-    this.vehicleRepository = vehicleRepository;
-  }
+  public VehicleDTO createVehicle(VehicleRequestDTO request, AppUserRecord user) {
+    validateVehicleDetails(request);
 
-  public VehicleDTO addVehicle(VehicleRequestDTO request, AppUserRecord user) {
-    validateAddVehicleRequest(request);
-
-    VehicleRecord vehicleRecord =
+    var vehicleRecord =
         VehicleRecord.builder()
             .make(request.getMake())
             .model(request.getModel())
@@ -36,7 +37,7 @@ public class VehicleServiceImpl implements VehicleService {
             .user(user)
             .build();
 
-    VehicleRecord savedVehicleRecord = vehicleRepository.save(vehicleRecord);
+    var savedVehicleRecord = vehicleRepository.save(vehicleRecord);
 
     return new VehicleDTO(
         savedVehicleRecord.getId(),
@@ -48,7 +49,7 @@ public class VehicleServiceImpl implements VehicleService {
         "Vehicle added successfully");
   }
 
-  private void validateAddVehicleRequest(VehicleRequestDTO request) {
+  private void validateVehicleDetails(VehicleRequestDTO request) {
     if (request.getMake() == null || request.getMake().trim().isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Make is required");
     }
@@ -65,9 +66,9 @@ public class VehicleServiceImpl implements VehicleService {
   }
 
   public VehicleBlotterDTO getVehicles(AppUserRecord user) {
-    List<VehicleRecord> vehicleRecordList = vehicleRepository.findByUser(user);
+    var vehicleRecordList = vehicleRepository.findByUser(user);
 
-    List<VehicleDTO> vehicles =
+    var vehicles =
         vehicleRecordList.stream()
             .map(
                 vehicleRecord ->

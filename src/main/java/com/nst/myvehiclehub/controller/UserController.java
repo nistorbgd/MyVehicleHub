@@ -20,7 +20,7 @@ public class UserController {
 
   @GetMapping(path = "/profile", produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ProfileDTO> getCurrentUserProfile(Authentication authentication) {
-    UserPrincipalRecord principal = (UserPrincipalRecord) authentication.getPrincipal();
+    var principal = (UserPrincipalRecord) authentication.getPrincipal();
     return ResponseEntity.ok(userService.getProfile(principal.getUser().getId()));
   }
 }

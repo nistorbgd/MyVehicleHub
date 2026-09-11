@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
   }
 
   public ProfileDTO getProfile(UUID userId) {
-    AppUserRecord user =
+    var user =
         userRepository
             .findById(userId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
