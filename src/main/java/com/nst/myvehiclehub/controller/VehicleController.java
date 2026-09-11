@@ -5,28 +5,30 @@ import com.nst.myvehiclehub.dto.response.AllVehiclesResponse;
 import com.nst.myvehiclehub.dto.response.VehicleResponse;
 import com.nst.myvehiclehub.entity.UserPrincipal;
 import com.nst.myvehiclehub.service.VehicleService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/vehicles")
+@RequiredArgsConstructor
 public class VehicleController {
-  private final VehicleService vehicleServiceImpl;
+  private final VehicleService vehicleService;
 
-  public VehicleController(VehicleService vehicleServiceImpl) {
-    this.vehicleServiceImpl = vehicleServiceImpl;
-  }
-
-  @PostMapping
-  public VehicleResponse addVehicle(
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<VehicleResponse> addVehicle(
       @RequestBody AddVehicleRequest request, Authentication authentication) {
     UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-    return vehicleServiceImpl.addVehicle(request, principal.getUser());
+    return ResponseEntity.ok(vehicleService.addVehicle(request, principal.getUser()));
   }
 
-  @GetMapping
-  public AllVehiclesResponse getVehicles(Authentication authentication) {
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<AllVehiclesResponse> getVehicles(Authentication authentication) {
     UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-    return vehicleServiceImpl.getVehicles(principal.getUser());
+    return ResponseEntity.ok(vehicleService.getVehicles(principal.getUser()));
   }
 }

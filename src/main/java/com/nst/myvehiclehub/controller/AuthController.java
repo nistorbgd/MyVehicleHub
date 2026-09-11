@@ -10,52 +10,68 @@ import com.nst.myvehiclehub.dto.response.RefreshTokenResponse;
 import com.nst.myvehiclehub.dto.response.RegisterResponse;
 import com.nst.myvehiclehub.entity.UserPrincipal;
 import com.nst.myvehiclehub.service.AuthService;
-import org.springframework.http.HttpStatus;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-  private final AuthService authServiceImpl;
+  private final AuthService authService;
 
-  public AuthController(AuthService authServiceImpl) {
-    this.authServiceImpl = authServiceImpl;
+  @PostMapping(
+      path = "/register",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<RegisterResponse> register(@RequestBody RegisterRequest registerRequest) {
+    return ResponseEntity.ok(authService.register(registerRequest));
   }
 
-  @PostMapping("/register")
-  @ResponseStatus(HttpStatus.CREATED)
-  public RegisterResponse register(@RequestBody RegisterRequest registerRequest) {
-    return authServiceImpl.register(registerRequest);
+  @PostMapping(
+      path = "/login",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest) {
+    return ResponseEntity.ok(authService.login(loginRequest));
   }
 
-  @PostMapping("/login")
-  public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-    return authServiceImpl.login(loginRequest);
+  @PostMapping(
+      path = "/google",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<LoginResponse> googleLogin(@RequestBody GoogleLoginRequest request) {
+    return ResponseEntity.ok(authService.googleLogin(request));
   }
 
-  @PostMapping("/google")
-  public LoginResponse googleLogin(@RequestBody GoogleLoginRequest request) {
-    return authServiceImpl.googleLogin(request);
+  @PostMapping(
+      path = "/refreshToken",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<RefreshTokenResponse> refreshToken(
+      @RequestBody RefreshTokenRequest request) {
+    return ResponseEntity.ok(authService.refreshToken(request));
   }
 
-  @PostMapping("/refreshToken")
-  public RefreshTokenResponse refreshToken(@RequestBody RefreshTokenRequest request) {
-    return authServiceImpl.refreshToken(request);
-  }
-
-  @PostMapping("/logout")
+  @PostMapping(
+      path = "/logout",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> logout(@RequestBody LogoutRequest request) {
-    authServiceImpl.logout(request);
+    authService.logout(request);
     return ResponseEntity.ok("Logged out successfully");
   }
 
-  @PostMapping("/logout-all")
+  @PostMapping(
+      path = "/logout-all",
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<String> logoutAll(Authentication authentication) {
     UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-    authServiceImpl.logoutAll(userPrincipal.getUser());
+    authService.logoutAll(userPrincipal.getUser());
     return ResponseEntity.ok("Logged out from all devices successfully");
   }
 }
