@@ -1,7 +1,6 @@
 package com.nst.myvehiclehub.serviceImpl;
 
 import com.nst.myvehiclehub.dto.response.ProfileDTO;
-import com.nst.myvehiclehub.entity.AppUserRecord;
 import com.nst.myvehiclehub.repository.AppUserRepository;
 import com.nst.myvehiclehub.service.UserService;
 import java.util.UUID;

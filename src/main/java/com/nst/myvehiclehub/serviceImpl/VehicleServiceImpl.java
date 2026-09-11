@@ -8,9 +8,7 @@ import com.nst.myvehiclehub.entity.VehicleRecord;
 import com.nst.myvehiclehub.repository.VehicleRepository;
 import com.nst.myvehiclehub.service.VehicleService;
 import java.time.Year;
-import java.util.List;
 import java.util.stream.Collectors;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
