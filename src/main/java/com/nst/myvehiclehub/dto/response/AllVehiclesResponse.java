@@ -1,4 +1,4 @@
-package com.nst.myvehiclehub.response;
+package com.nst.myvehiclehub.dto.response;
 
 import java.util.List;
 import lombok.AllArgsConstructor;

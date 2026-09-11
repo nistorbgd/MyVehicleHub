@@ -1,8 +1,8 @@
 package com.nst.myvehiclehub.repository;
 
 import com.nst.myvehiclehub.entity.AppUser;
-import com.nst.myvehiclehub.entity.AuthProvider;
-import com.nst.myvehiclehub.entity.Role;
+import com.nst.myvehiclehub.enums.AuthProvider;
+import com.nst.myvehiclehub.enums.Role;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

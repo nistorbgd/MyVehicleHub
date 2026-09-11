@@ -1,4 +1,4 @@
-package com.nst.myvehiclehub.entity;
+package com.nst.myvehiclehub.enums;
 
 public enum Role {
   USER,

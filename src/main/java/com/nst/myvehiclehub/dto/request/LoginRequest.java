@@ -1,4 +1,4 @@
-package com.nst.myvehiclehub.request;
+package com.nst.myvehiclehub.dto.request;
 
 import lombok.Data;
 

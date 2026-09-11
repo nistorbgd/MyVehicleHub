@@ -1,4 +1,4 @@
-package com.nst.myvehiclehub.entity;
+package com.nst.myvehiclehub.enums;
 
 public enum AuthProvider {
   EMAIL, // Registered via /register endpoint

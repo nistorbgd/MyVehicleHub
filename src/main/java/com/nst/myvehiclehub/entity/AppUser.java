@@ -1,5 +1,7 @@
 package com.nst.myvehiclehub.entity;
 
+import com.nst.myvehiclehub.enums.AuthProvider;
+import com.nst.myvehiclehub.enums.Role;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import java.util.UUID;
