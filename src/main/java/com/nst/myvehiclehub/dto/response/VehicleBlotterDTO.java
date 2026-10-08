@@ -1,5 +1,6 @@
 package com.nst.myvehiclehub.dto.response;
 
+import com.nst.myvehiclehub.dto.VehicleDTO;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;

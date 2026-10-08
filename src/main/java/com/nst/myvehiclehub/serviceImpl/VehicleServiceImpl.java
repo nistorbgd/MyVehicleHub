@@ -1,14 +1,12 @@
 package com.nst.myvehiclehub.serviceImpl;
 
-import com.nst.myvehiclehub.dto.request.VehicleRequestDTO;
+import com.nst.myvehiclehub.dto.VehicleDTO;
 import com.nst.myvehiclehub.dto.response.VehicleBlotterDTO;
-import com.nst.myvehiclehub.dto.response.VehicleDTO;
 import com.nst.myvehiclehub.entity.AppUserRecord;
-import com.nst.myvehiclehub.entity.VehicleRecord;
+import com.nst.myvehiclehub.mapper.VehicleMapper;
 import com.nst.myvehiclehub.repository.VehicleRepository;
 import com.nst.myvehiclehub.service.VehicleService;
 import java.time.Year;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -22,32 +20,20 @@ public class VehicleServiceImpl implements VehicleService {
 
   private final VehicleRepository vehicleRepository;
 
-  public VehicleDTO createVehicle(VehicleRequestDTO request, AppUserRecord user) {
+  private final VehicleMapper vehicleMapper;
+
+  public VehicleDTO createVehicle(VehicleDTO request, AppUserRecord user) {
     validateVehicleDetails(request);
 
-    var vehicleRecord =
-        VehicleRecord.builder()
-            .make(request.getMake())
-            .model(request.getModel())
-            .year(request.getYear())
-            .plateNumber(request.getPlateNumber())
-            .vin(request.getVin())
-            .user(user)
-            .build();
+    var newVehicleRecord = vehicleMapper.mapRequestDTOtoRecord(request);
+    newVehicleRecord.setUser(user);
 
-    var savedVehicleRecord = vehicleRepository.save(vehicleRecord);
+    var savedVehicleRecord = vehicleRepository.save(newVehicleRecord);
 
-    return new VehicleDTO(
-        savedVehicleRecord.getId(),
-        savedVehicleRecord.getMake(),
-        savedVehicleRecord.getModel(),
-        savedVehicleRecord.getYear(),
-        savedVehicleRecord.getPlateNumber(),
-        savedVehicleRecord.getVin(),
-        "Vehicle added successfully");
+    return vehicleMapper.mapRecordToResponseDTO(savedVehicleRecord);
   }
 
-  private void validateVehicleDetails(VehicleRequestDTO request) {
+  private void validateVehicleDetails(VehicleDTO request) {
     if (request.getMake() == null || request.getMake().trim().isEmpty()) {
       throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Make is required");
     }
@@ -66,20 +52,7 @@ public class VehicleServiceImpl implements VehicleService {
   public VehicleBlotterDTO getVehicles(AppUserRecord user) {
     var vehicleRecordList = vehicleRepository.findByUser(user);
 
-    var vehicles =
-        vehicleRecordList.stream()
-            .map(
-                vehicleRecord ->
-                    new VehicleDTO(
-                        vehicleRecord.getId(),
-                        vehicleRecord.getMake(),
-                        vehicleRecord.getModel(),
-                        vehicleRecord.getYear(),
-                        vehicleRecord.getPlateNumber(),
-                        vehicleRecord.getVin(),
-                        null // No message needed for list items
-                        ))
-            .collect(Collectors.toList());
+    var vehicles = vehicleRecordList.stream().map(vehicleMapper::mapRecordToResponseDTO).toList();
 
     return new VehicleBlotterDTO(vehicles);
   }

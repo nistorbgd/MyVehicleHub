@@ -4,6 +4,7 @@ import com.nst.myvehiclehub.enums.AuthProvider;
 import com.nst.myvehiclehub.enums.Role;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
+import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,26 +20,35 @@ import org.hibernate.annotations.UuidGenerator;
 @Builder
 public class AppUserRecord {
 
-  @Id @UuidGenerator private UUID id;
+  @Id
+  @Column(name = "id")
+  @UuidGenerator
+  private UUID id;
 
-  @Column(nullable = false, unique = true)
+  @Column(name = "email", nullable = false, unique = true)
   private String email;
 
-  @Column(nullable = false)
+  @Column(name = "password", nullable = false)
   private String password;
 
-  @Column private String lastName;
+  @Column(name = "lastName", nullable = false)
+  private String lastName;
 
-  @Column private String firstName;
+  @Column(name = "firstName", nullable = false)
+  private String firstName;
 
-  @Column private int age;
+  @Column(name = "age", nullable = false)
+  private int age;
+
+  @OneToMany(mappedBy = "user")
+  private List<VehicleRecord> vehicles;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @Column(name = "role", nullable = false)
   @Builder.Default
   private Role role = Role.USER;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false)
+  @Column(name = "authProvider", nullable = false)
   private AuthProvider authProvider;
 }

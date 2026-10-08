@@ -22,6 +22,12 @@ public class UserServiceImpl implements UserService {
         userRepository
             .findById(userId)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-    return new ProfileDTO(user.getFirstName(), user.getLastName(), user.getEmail(), user.getAge());
+
+    return ProfileDTO.builder()
+        .firstName(user.getFirstName())
+        .lastName(user.getLastName())
+        .email(user.getEmail())
+        .age(user.getAge())
+        .build();
   }
 }

@@ -1,8 +1,7 @@
 package com.nst.myvehiclehub.controller;
 
-import com.nst.myvehiclehub.dto.request.VehicleRequestDTO;
+import com.nst.myvehiclehub.dto.VehicleDTO;
 import com.nst.myvehiclehub.dto.response.VehicleBlotterDTO;
-import com.nst.myvehiclehub.dto.response.VehicleDTO;
 import com.nst.myvehiclehub.entity.UserPrincipalRecord;
 import com.nst.myvehiclehub.service.VehicleService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,7 @@ public class VehicleController {
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<VehicleDTO> createVehicle(
-      @RequestBody VehicleRequestDTO request, Authentication authentication) {
+      @RequestBody VehicleDTO request, Authentication authentication) {
     var principal = (UserPrincipalRecord) authentication.getPrincipal();
     return ResponseEntity.ok(vehicleService.createVehicle(request, principal.getUser()));
   }

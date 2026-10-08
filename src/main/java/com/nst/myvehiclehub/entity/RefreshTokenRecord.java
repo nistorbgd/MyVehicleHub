@@ -18,22 +18,23 @@ import lombok.NoArgsConstructor;
 public class RefreshTokenRecord {
 
   @Id
+  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(unique = true, nullable = false)
+  @Column(name = "token", nullable = false, unique = true)
   private String token;
+
+  @Column(name = "expiryDate", nullable = false)
+  private Instant expiryDate;
+
+  @Column(name = "createdDate", nullable = false)
+  private Instant createdDate;
+
+  @Column(name = "revoked", nullable = false)
+  private boolean revoked = false;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private AppUserRecord user;
-
-  @Column(nullable = false)
-  private Instant expiryDate;
-
-  @Column(nullable = false)
-  private Instant createdDate;
-
-  @Column(nullable = false)
-  private boolean revoked = false;
 }

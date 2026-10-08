@@ -6,7 +6,7 @@ import com.nst.myvehiclehub.dto.request.RefreshTokenDTO;
 import com.nst.myvehiclehub.dto.request.RegisterRequestDTO;
 import com.nst.myvehiclehub.dto.response.LoginResponse;
 import com.nst.myvehiclehub.dto.response.RefreshTokenResponse;
-import com.nst.myvehiclehub.dto.response.RegisterResponse;
+import com.nst.myvehiclehub.dto.response.RegisterResponseDTO;
 import com.nst.myvehiclehub.entity.UserPrincipalRecord;
 import com.nst.myvehiclehub.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class AuthController {
       path = "/register",
       consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<RegisterResponse> register(
+  public ResponseEntity<RegisterResponseDTO> register(
       @RequestBody RegisterRequestDTO registerRequestDTO) {
     return ResponseEntity.ok(authService.register(registerRequestDTO));
   }

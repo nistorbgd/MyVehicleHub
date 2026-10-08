@@ -1,10 +1,13 @@
-package com.nst.myvehiclehub.dto.response;
+package com.nst.myvehiclehub.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class VehicleDTO {
@@ -14,5 +17,5 @@ public class VehicleDTO {
   private Integer year;
   private String plateNumber;
   private String vin;
-  private String message;
+  private List<HistoryEntryDTO> historyEntries;
 }

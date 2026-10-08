@@ -7,7 +7,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.nst.myvehiclehub.dto.request.*;
 import com.nst.myvehiclehub.dto.response.LoginResponse;
 import com.nst.myvehiclehub.dto.response.RefreshTokenResponse;
-import com.nst.myvehiclehub.dto.response.RegisterResponse;
+import com.nst.myvehiclehub.dto.response.RegisterResponseDTO;
 import com.nst.myvehiclehub.entity.AppUserRecord;
 import com.nst.myvehiclehub.entity.RefreshTokenRecord;
 import com.nst.myvehiclehub.entity.UserPrincipalRecord;
@@ -47,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
   @Value("${spring.security.oauth2.client.registration.google.client-id}")
   private String googleClientId;
 
-  public RegisterResponse register(RegisterRequestDTO registerRequestDTO) {
+  public RegisterResponseDTO register(RegisterRequestDTO registerRequestDTO) {
     validateRegisterRequest(registerRequestDTO);
     var newUser =
         AppUserRecord.builder()
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements AuthService {
             .build();
 
     appUserRepository.save(newUser);
-    return new RegisterResponse(newUser.getId().toString());
+    return new RegisterResponseDTO(newUser.getId().toString());
   }
 
   private void validateRegisterRequest(RegisterRequestDTO registerRequestDTO) {

@@ -1,6 +1,7 @@
 package com.nst.myvehiclehub.entity;
 
 import jakarta.persistence.*;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,21 +16,27 @@ import lombok.NoArgsConstructor;
 public class VehicleRecord {
 
   @Id
+  @Column(name = "id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(nullable = false)
+  @Column(name = "make", nullable = false)
   private String make;
 
-  @Column(nullable = false)
+  @Column(name = "model", nullable = false)
   private String model;
 
-  @Column(nullable = false)
+  @Column(name = "year", nullable = false)
   private Integer year;
 
-  @Column private String plateNumber;
+  @Column(name = "plateNumber", nullable = false, unique = true)
+  private String plateNumber;
 
-  @Column private String vin;
+  @Column(name = "vin", nullable = false, unique = true)
+  private String vin;
+
+  @OneToMany(mappedBy = "vehicle")
+  private List<HistoryEntryRecord> historyEntries;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
